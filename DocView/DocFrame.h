@@ -16,6 +16,10 @@ public:
 	void insert(const char *name, int age, char gender, int weight, const char *history, const char *ailment);
 	tao::pq::result get(int id);
 
+	std::string connectstring;
+
+	std::string getdbstring(void);
+
 	wxStaticBitmap *image;
 	wxGridSizer *grid;
 	std::shared_ptr<tao::pq::connection> db;

@@ -16,9 +16,9 @@ patientBook::~patientBook()
 }
 
 void
-patientBook::add(std::string name, int age, std::string gender, int weight, std::string history, std::string ailment, int dbid)
+patientBook::add(std::string name, int age, std::string gender, int weight, std::string history, std::string ailment, int dbid, std::string connectstring)
 {
-	patientInfo *page = new patientInfo(this->nb, wxID_ANY, age, gender, weight, history, ailment, dbid);
+	patientInfo *page = new patientInfo(this->nb, wxID_ANY, age, gender, weight, history, ailment, dbid, connectstring);
 	nb->AddPage(page, name);
 	nb->Layout();
 }

@@ -5,9 +5,13 @@
 
 patientInfo::patientInfo(wxWindow *parent, int id, int age, 
 	std::string gender, int weight, std::string history, 
-	std::string ailment, int dbid)
+	std::string ailment, int dbid,
+	std::string connectinfo)
 	: wxPanel(parent, id)
 {
+
+	this->connectstring = connectinfo;
+
 	this->SetBackgroundColour(wxColor(255, 45, 0));
 	this->grid = new wxGridSizer(1);
 
@@ -53,7 +57,7 @@ void
 patientInfo::save(wxCommandEvent&)
 {
 	try {
-		const auto db = tao::pq::connection::create("user=postgres password=chris host=192.168.0.20 dbname=hospitalsite");
+		const auto db = tao::pq::connection::create(this->connectstring);
 		db->execute("UPDATE hospitalsite_profile SET age = $1, gender = $2, weight = $3, history = $4, current_ailment = $5 WHERE id = $6",
 			this->age->GetValue().ToStdString(), this->gender->GetValue().ToStdString(), this->weight->GetValue().ToStdString(), this->history->GetValue().ToStdString(), this->ailment->GetValue().ToStdString(), this->dbid);
 		wxMessageBox(L"SAVE COMPLETED, Thanks for using DOCVIEW™ :)");

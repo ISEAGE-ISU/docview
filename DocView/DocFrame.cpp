@@ -3,7 +3,7 @@
 #include "DocView.h"
 #include "DocFrame.h"
 
-const char* backimage = "C:\\Users\\moody\\source\\repos\\DocView\\DocView\\back2.png";
+const char* backimage = "C:\\back.png";
 
 DocFrame::DocFrame(const wxString &title, const wxPoint &pos,const wxSize &size)
 {
@@ -19,7 +19,17 @@ DocFrame::DocFrame(const wxString &title, const wxPoint &pos,const wxSize &size)
 
 	this->grid->Add(this->pb);
 
-	try { this->db = tao::pq::connection::create("user=postgres password=chris host=192.168.0.20 dbname=hospitalsite"); }
+	connectstring = std::string("user=postgres dbname=hospitalsite host=");
+
+	wxTextEntryDialog entry = wxTextEntryDialog(this, "Connection info", "PLEASE ENTER YOUR DB IP");
+	if (entry.ShowModal() != wxID_OK) {
+		exit(1);
+	}
+
+
+	connectstring += entry.GetValue().ToStdString();
+
+	try { this->db = tao::pq::connection::create(connectstring); }
 	catch (const std::runtime_error&) { 
 		wxMessageBox("Could not connect to db\nPlease check your connection and try again");  
 		exit(1);
@@ -47,7 +57,8 @@ DocFrame::scrape(void)
 				row[4].as<int>(),
 				row[5].as<std::string>(),
 				row[6].as<std::string>(),
-				row[0].as<int>());
+				row[0].as<int>(),
+				this->connectstring);
 
 		}
 	}
@@ -79,4 +90,10 @@ DocFrame::get(int id)
 	catch (const std::exception&) {
 		wxMessageBox("Error pulling values for patient");
 	}
+}
+
+
+std::string
+DocFrame::getdbstring(void) {
+	return std::string(this->connectstring);
 }
